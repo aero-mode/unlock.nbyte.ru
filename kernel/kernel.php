@@ -349,7 +349,7 @@ class timer{
 				}
 				$timer_title = "Мы откроемся через:";
 			}else{
-				$limit = 32400;
+				$limit = 36400;
 				$colorLeft = "#FF0000";
 				$colorRight = "#008000";
 				$dataStart = date("d F Y");
