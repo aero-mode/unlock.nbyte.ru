@@ -1,0 +1,53 @@
+#down_dashboard  {
+	height:20px;
+	width:200px;
+	display:inline-block;
+}
+#countdown_dashboard {
+	width: 220px;
+	margin:0 auto;
+}
+
+h2.subtitle {
+	margin-top: 0px;
+	margin-bottom: 40px;
+}
+
+.dash {
+	/*background: url("../images/dash.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);*/
+	float: left;
+	height: 57px;
+	margin-left: 5px;
+	position: relative;
+	width: 67px;
+}
+
+.fff {
+	color: #555555;
+	font-family: Arial,sans-serif;
+	font-size: 27.5pt;
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+.dash .digit {
+	color: #555555;
+	float: left;
+	font-family: Arial,sans-serif;
+	font-size: 27.5pt;
+	font-weight: bold;
+	position: relative;
+	text-align: center;
+	width: 24.5px;
+}
+
+.dash_title {
+	bottom: 0;
+	color: #555555;
+	display: block;
+	font-size: 5pt;
+	letter-spacing: 2px;
+	position: absolute;
+	margin-left:5px;
+	text-transform: uppercase;
+}
