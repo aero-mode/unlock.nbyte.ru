@@ -74,14 +74,14 @@ if($now>=19 || $now<9){
 	}
 	$timer_title = "Мы откроемся через:";
 }else{
-	$limit = 36000;
+	$limit = 39600;
 	$colorLeft = "#FF0000";
 	$colorRight = "#008000";
 	$dataStart = date("d F Y");
 	$dataStart = strtotime($dataStart."09:00:00");
 	$current = time()-$dataStart;
 	$hours = 18-$hour;
-	$timer_title = "До конца рабочего дня осталось:";
+	$timer_title = "До конца рабочего дня осталось тестовое:";
 }
 $hour_text = array("час", "часа", "часов");
 $minute_text = array("минута", "минуты", "минут");

@@ -24,7 +24,7 @@
 	</ul>
 </nav>
 <div>
-   <h1 class="slogan"><span style="color:red"> тест 1.1</span></h1>
+   <h1 class="slogan"><span style="color:red"> тест 1.2</span></h1>
    <h1 class="slogan"><span style="color:green"> Востановление данных с любых носителей.</span>
    <span style="color:green"> </span></h1>
 </div>
