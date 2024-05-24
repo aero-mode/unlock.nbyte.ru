@@ -1,0 +1,50 @@
+	body, table {
+		font-family: Arial;
+		font-size:11pt;
+	}
+	table, table td {
+		border-collapse:collapse;
+	}
+	
+	table td {
+		padding:3px;
+	}
+	
+	tr th {
+	 background:#ccc;
+	 font-size:11pt;
+	 padding:5px;
+	}
+
+	a {
+		text-decoration:none;
+		color:#006699;
+	}
+	
+	a:hover {
+		color:black;
+	}
+	
+	div.top_menu  {
+		background:#eee;
+		padding:15px;
+		margin-bottom:10px;
+		height:20px;
+	}
+	
+	div.top_menu ul {
+		list-style:none;
+	margin:0;
+	padding:0;		
+	}
+	
+	div.top_menu ul li {
+		margin:0;
+		padding:0;		
+		float:left;
+		margin-right:20px;
+	}
+	
+	.red {
+		#b90000;
+	}

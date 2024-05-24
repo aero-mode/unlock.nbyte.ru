@@ -1,0 +1,147 @@
+{% extends "main.tpl.twig" %}
+{% block scripts %}
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var list = $('#list').jtable({
+				title: 'Список задач',
+				paging: true,
+				pageSize: 10,
+				openChildAsAccordion: true,
+				saveUserPreferences: false,
+				actions: {
+					listAction: function (postData, jtParams) {
+						return $.Deferred(function ($dfd) {
+							$.ajax({
+								url: '/admin/fullList/?start=' + jtParams.jtStartIndex + '&size=' + jtParams.jtPageSize,
+								type: 'GET',
+								dataType: 'json',
+								data: postData,
+								success: function (data) {
+									$dfd.resolve(data);
+								},
+								error: function () {
+									$dfd.reject();
+								}
+							});
+						});
+					}
+				},
+				fields: {
+					edit: {
+						title: '',
+						width: '1%',
+						columnResizable: false,
+						display: function (data){
+							if(parseInt(data.record.status_id)!=4){
+								return '<a href="/edit/'+data.record.id+'"><img src="{{theme}}/img/ico_edit.gif" /></a>';
+							}
+						}
+					},
+					id: {
+						key: true,
+						width: '2%',
+						columnResizable: false,
+						title: 'ID',
+						display: function(data){
+							return '<div style="text-align:center">'
+									+'<b>'+data.record.id+'</b>'
+									+'</div>';
+						}
+					},
+					client_name: {
+						title: 'Клиент',
+						columnResizable: false,
+						display: function(data){
+							return '<div style="text-align:center">'
+									+data.record.client_name
+									+'<br>'
+									+'<br>'
+									+data.record.client_phone
+									+'<br>'
+									+'<br>'
+									+data.record.client_address
+									+'</div>';
+						}
+					},
+					/*status_name: {
+						title: 'Статус'
+					},*/
+					date_start: {
+						title: 'Начало',
+						width: '7%',
+						columnResizable: false,
+						display: function(data){
+							if(data.record.date_start){
+								return '<div style="text-align:center">'
+									+data.record.date_start
+									+'</div>';
+							}
+						}
+					},
+					device_name: {
+						title: 'Устройство'
+					},
+					sn: {
+						title: 'SN'
+					},
+					model: {
+						title: 'Модель'
+					},
+					master_name: {
+						title: 'Мастер'
+					},
+					problem: {
+						title: 'Проблема'
+					},
+					what_to_do: {
+						title: 'Что сделать'
+					},
+					what_made: {
+						title: 'Что сделано'
+					},
+					recommendations: {
+						title: 'Рекомендации'
+					},
+					price_of_work: {
+						title: 'Ц. раб.',
+						columnResizable: false,
+						display: function(data){
+							if(data.record.price_of_work){
+								return '<div style="text-align:center">'
+								+'<b>'+data.record.price_of_work+'&nbsp;р.</b>'
+								+'</div>';
+							}
+						}
+					},
+					price_of_hard: {
+						title: 'Ц. жел.',
+						columnResizable: false,
+						display: function(data){
+							if(data.record.price_of_hard){
+								return '<div style="text-align:center">'
+								+'<b>'+data.record.price_of_hard+'&nbsp;р.</b>'
+								+'</div>';
+							}
+						}
+					},
+					date_end: {
+						title: 'Завершено',
+						width: '7%',
+						columnResizable: false,
+						display: function(data){
+							if(data.record.date_end){
+								return '<div style="text-align:center">'
+										+data.record.date_end
+										+'</div>';
+							}
+						}
+					}
+				}
+			});
+			list.jtable('load');
+		});
+	</script>
+{% endblock %}
+{% block body %}
+	<div id="list"></div>
+{% endblock %}

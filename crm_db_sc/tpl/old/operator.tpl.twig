@@ -1,0 +1,298 @@
+{% extends "main.tpl.twig" %}
+{% block title %}Список задач{% endblock %}
+{% block scripts %}
+	<script>
+	var window_scroll = 0;
+	
+		$(document).ready(function(){
+			
+			// сохраняем позицию скролла
+			$('.edit_btn').on('click', function(){			
+				window_scroll = $(window).scrollTop();
+				localStorage.setItem('window_scroll', window_scroll);
+			});
+			
+			// скролим в предыдущее место
+			if(localStorage.getItem('window_scroll')){				
+				window_scroll = localStorage.getItem('window_scroll');
+				$(window).scrollTop(window_scroll);
+			}
+			
+			// акт получения
+			$(".act_reception").on('click', function(){				
+				var ta_id = $(this).data('id');
+				window.open('{{site}}/act/reception/?id='+ta_id, '_blank', 'width=850,height=600,left=50,top=50,location=no,menubar=no,scrollbars=no,status=no,toolbar=no');
+				return false;				
+			});
+			
+			// акт выдачи
+			$(".act_issuing").on('click', function(){				
+				var ta_id = $(this).data('id');
+				window.open('{{site}}/zak/act-issuing.php?id='+ta_id, '_blank', 'width=850,height=600,left=50,top=50,location=no,menubar=no,scrollbars=no,status=no,toolbar=no');
+				return false;				
+			});
+		
+			$(".pay").on('click', function(e){
+				e.preventDefault();
+				
+				var cena_all = $(this).data('all');
+				var cena_work = $(this).data('work');
+				var cena_hard = $(this).data('hard');
+				var cena_hard_p = $(this).data('hard-p');
+				//var cena_all = cena_work + cena_hard + cena_hard_p;
+				
+				var link = $(this).attr('href');
+				var lol = confirm("Деньги получены?\r\n\r\nЖелезо (сервис): " + cena_hard_p + " \r\nЖелезо (партнер): " + cena_hard + " \r\nРабота: " + cena_work + " \r\n-----\r\nВсего: " + cena_all);
+				if(lol){
+					$.get(link)
+						.success(function (data) {
+							if(data.result == 'ok'){
+								window.open('{{site}}/zak/act-issuing.php?id='+data.id, '_blank', 'width=850,height=600,left=50,top=50,location=no,menubar=no,scrollbars=no,status=no,toolbar=no');
+								location.href= '{{site}}/operator/';
+							}else{
+								alert('Ошибка!')
+							}
+						})
+				}else{
+
+				}
+			});
+	
+			$("#fastWind").dialog({
+				modal: true,
+				position: 'top',
+				autoOpen: false,
+				width: 220,
+				buttons:
+						[{
+							text: "Сохранить",
+							click: function(e){
+								var s = $("#fastForm").serialize();
+								s = s + '&type=fastTask';
+								$.post('{{site}}/operator/add/', s)
+										.success(function(data){
+											//window.open('{{site}}/act/issuing/?id='+data, '_blank', 'width=1000,height=600,left=0,top=0,location=no,menubar=no,scrollbars=no,status=no,toolbar=no');
+											location.reload();
+										});
+								$("#fastForm")[0].reset();
+								$(this).dialog("close");
+							}
+						}]
+			});
+
+			$("#ta_de_id").on("change", function(){
+				console.log($(this).context.value);
+				if($(this).context.value == '9'){
+					//$("#textText").hide();
+					$("#textHard").show();
+				}else{
+					//$("#textText").show();
+					$("#textHard").hide();
+				}
+			});
+			
+			
+			$("#fastTask").on("click", function(){
+				$("#fastWind").dialog('open');
+			});
+
+		});
+	</script>
+	<style>
+		ul.hr {
+			list-style:none;
+		}
+		ul.hr li {
+			float:left;
+			padding-right:6px;
+			height: 50px;
+		}
+		a:link, a:visited, a:active {
+			text-decoration: none;
+			color: blue;
+		}
+		a:hover {
+			text-decoration: none;
+			color: red;
+		}
+		.exit-link:link, .exit-link:visited, .exit-link:active{
+			border-bottom: 2px dotted blue;
+			font-weight: bold;
+		}
+		.exit-link:hover{
+			border-bottom: 2px dotted red;
+			font-weight: bold;
+		}
+		.edit_btn {
+			width:20px;
+			height:20px;
+			padding: 5px;
+			vertical-align: middle;
+		}
+		
+		.edit_btn:hover {
+			opacity:0.8;
+		}
+		
+		/* new */
+		
+		.header_wr {
+			display:flex;
+			justify-content: space-between;
+			align-items: center;
+			padding:15px 20px 20px 20px;
+		}
+		
+		.header_wr a {
+			color:#069;
+			font-size:16px; 
+		}
+		
+		.header_label1,
+		.header_label2 {
+		}
+		
+		.header_search {
+		}
+		
+		.header_link1,
+		.header_link2 {
+		    display: flex;
+			flex-direction: column;
+		}
+		
+		.header_link1 a {
+			font-weight:bold;
+			margin: 5px;
+		}
+		
+		.header_link2 a {
+			margin: 5px;
+		}
+		
+		.header_search input {
+		    padding: 0 10px;
+			height:36px;
+			width: 100%;
+			max-width: 230px;
+		}
+		
+		
+	</style>
+{% endblock %}
+{% block body %}
+
+	<div class="header_wr">
+		
+		<div class="header_label1">
+			<div>Денег в кассе: {{header_stat.day_money.all is empty ? "0 руб." : '%s руб.'|format(header_stat.day_money.all)}}</div>
+			<div>Работа: {{header_stat.day_money.work is empty ? "0 руб." : '%s руб.'|format(header_stat.day_money.work)}} / {{header_stat.day_money.need}} руб.</div>
+			<div>Выполнено: {{header_stat.month_money.percent}}% (нужно {{header_stat.month_money.percent_need}}%)</div>
+		</div>
+		
+		<div class="header_label2">
+			{#<div>Работа за месяц: {{header_stat.month_money.work is empty ? "0 руб." : '%s руб.'|format(header_stat.month_money.work)}}</div>#}
+			{#<div>Железо за месяц: {{header_stat.month_money.hard is empty ? "0 руб." : '%s руб.'|format(header_stat.month_money.hard)}}</div>#}
+			<div>Количество активных: {{current_active}}</div>
+			<div>Принято за сегодня: {{today_tasks}}</div>
+		</div>
+		
+		<form class="header_search" id="search" name="search" method="GET" action="{{site}}/operator/search/">
+			<input id="Isearch" placeholder="ID, телефон, имя, модель..." name="value" {% if search_value %}value="{{search_value}}"{% endif %}>
+		</form>		
+		
+		<div class="header_link1">
+			<a href="{{site}}/operator/add/{{add_for_client}}">Добавить задачу {% if add_for_client %}клиенту{% endif %}</a>
+			<a target="_blank" href="{{site}}/stats/">Статистика</a>			
+		</div>
+		
+		<div class="header_link2">
+			<a href="{{site}}/login/logout/">Выйти</a>
+			{% if link != 'main' %}<a href="{{site}}/operator/">Назад</a>{% endif %}
+		</div>
+	
+	</div>
+
+	<table class="table" width="100%">
+		<thead>
+			<tr>
+				<th></th>
+				<th style="width: 30px">ID</th>
+				<th style="width: 30px">Акт</th>
+				<th style="width: 110px">Клиент</th>
+				<th style="width: 70px">Добавлено</th>
+				<th style="width: 70px">Тип</th>
+				<th style="width: 70px">Модель</th>
+				<th style="width: 70px">SN</th>
+				<th>Переговоры с клиентом</th>
+				<th>Что сделано</th>
+				<th style="width: 110px">Всего / Касса</th>
+				<th style="width: 70px">Завершено</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for data in data %}
+				<tr style="background-color: {{data.st_bg_color}}; border: {{data.st_br_color}}">
+					<td class="center" style="vertical-align: middle;">
+						{% if data.ta_st_id == 1 %}
+							<a href="{{site}}/operator/edit/?id={{data.ta_id}}"><img class="edit_btn" src="{{theme}}/img/edit.svg"/></a>
+						{% elseif data.ta_st_id == 2 %}
+							<a href="{{site}}/operator/edit/?id={{data.ta_id}}"><img class="edit_btn" src="{{theme}}/img/edit.svg"/></a>
+						{% elseif data.ta_st_id == 3 %}
+							<a href="{{site}}/operator/edit/?id={{data.ta_id}}"><img class="edit_btn" src="{{theme}}/img/edit.svg"/></a><br/>
+							<a class="pay" href="{{site}}/operator/pay/?id={{data.ta_id}}" data-all="{{data.ta_price_all}}" data-work="{{data.ta_price_work}}" data-hard="{{data.ta_price_hard}}" data-hard-p="{{data.ta_price_service}}"><img src="{{theme}}/img/pay.png"/></a>
+						{% elseif data.ta_st_id == 4 %}
+						{% endif %}
+					</td>
+					<td class="center">{{'%04d'|format(data.ta_id)}}</td>
+					<td class="center">
+						{% if data.ta_st_id == 1 %}
+							<a class="act_reception" data-id="{{data.ta_id}}" href="">прием</a>
+						{% elseif (data.ta_st_id == 3 or data.ta_st_id == 4) %}
+							<a class="act_issuing" data-id="{{data.ta_id}}" href="">выдача</a>
+						{% endif %}
+					</td>
+					<td class="center"><a href="{{site}}/operator/client/?cl_id={{data.cl_id}}">{{data.cl_name}}<br/>{{data.cl_phone}}</a></td>
+					<td class="center">{{data.ta_date_add is empty ? "" : data.ta_date_add|date("d-m-Y") }}<br/>{{data.ta_date_add is empty ? "" : data.ta_date_add|date("H:i") }}</td>
+					<td class="center">{{data.de_name}}</td>
+					<td class="center">{{data.ta_model}}</td>
+					<td class="center">{{data.ta_serial}}</td>
+					<td>{{data.ta_what_to_do|raw}}</td>
+					<td>{{data.ta_what_is_done|raw}}</td>
+					<td class="center">
+						{% set kassa = data.ta_price_all - data.ta_price_hard - data.ta_price_work - data.ta_price_service %}
+						{{data.ta_price_all is empty ? "" : '%s руб.'|format(data.ta_price_all)}} <br>
+						<b style='font-weight:bold;'>{{data.ta_price_all is empty ? '' : '%s руб.'|format(kassa)}}</b>
+					</td>
+					<td class="center">{{data.ta_date_end is empty ? "" : data.ta_date_end|date("d-m-Y") }}<br/>{{data.ta_date_end is empty ? "" : data.ta_date_end|date("H:i") }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+		
+		
+	<div id="fastWind" style="display:none">
+		<form id="fastForm">
+			<div style="width:100%;margin-bottom:15px;">
+				<label><span style="padding-right:15px;display:inline-block;width:150px">Тип устройства</span>
+					<select id="ta_de_id" name="ta_de_id" class="validate[required]">
+						<option selected></option>
+						{% for device in devices %}
+							<option value="{{device.de_id}}">{{device.de_name}}</option>
+						{% endfor %}
+					</select>
+				</label>
+			</div>
+			<div style="width:100%;margin-bottom:15px;" id="textWork">
+				<label><span style="padding-right:15px;display:inline-block;width:150px" id="textSum">Сумма работа</span><input class="standart" type="text" name="priceWork" value="" id="priceWork"></label>
+			</div>
+			<div style="width:100%;margin-bottom:15px;" id="textHard">
+				<label><span style="padding-right:15px;display:inline-block;width:150px" id="textSumHard">Железо</span><input class="standart" type="text" name="priceHard" value="" id="priceHard"></label>
+			</div>
+			<div style="width:100%" id="textText">
+				<label><span style="padding-right:15px;display:inline-block;width:150px">Что сделано?</span><textarea class="standart" name="ta_what_is_done" id="whatDoing"></textarea></label>
+			</div>
+		</form>
+	</div>
+	
+	
+{% endblock %}

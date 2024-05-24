@@ -1,0 +1,147 @@
+{% extends "main.tpl.twig" %}
+{% block title %}Акт приемки{% endblock %}
+{% block scripts %}
+	<script src="{{theme}}/scripts/autoresize.jquery.js"></script>
+	<style>
+		.wrapper {
+			min-width: 800px;
+			max-width: 800px;
+			margin: 0 auto;
+		}
+		table, table td {
+			border-collapse:collapse !important;
+			padding:3px;
+			width: 800px;
+			margin: 0;
+		}
+		table {
+			white-space: normal;
+			line-height: normal;
+			font-weight: normal;
+			font-size: medium;
+			font-variant: normal;
+			font-style: normal;
+			color: -webkit-text;
+			text-align: start;
+		}
+		b {
+			font-weight: bold;
+		}
+		.head {
+			font-size:18px;
+			line-height:30px;
+		}
+		.h1{
+			color:black;
+			font-weight:normal;
+			margin-top:25px;
+			margin-bottom:20px;
+			font-family:Arial, sans-serif;
+			font-size:22pt;
+		}
+		.print{
+			width:800px;
+			margin: 0 auto;
+		}
+		
+		@media print{
+			.wrapper {
+				width: 275mm;
+				margin: 0;
+			}
+			table, table td {
+				border-collapse:collapse !important;
+				padding:5mm;
+				width: 275mm;
+				margin: 0;
+			}
+			.print{
+				margin: 0;
+			}
+			.head {
+				width:140mm;
+				font-size:18px;
+				line-height:30px;
+			}
+			.blk-head{
+				background:#eeeeee;
+			}
+			.h1{
+				color:black;
+				font-weight:normal;
+				margin-top:25px;
+				margin-bottom:20px;
+				font-family:Arial, sans-serif;
+				font-size:22pt;
+			}
+		}
+	</style>
+	<script>
+		$(document).ready(function(){
+			$('textarea').autoResize();
+			//doPrint();
+		});
+		function doPrint() {
+			window.print();
+			window.close();
+		}
+	</script>
+{% endblock %}
+{% block body %}
+	<div class="print">
+		<table align="center">
+			<tr>
+				<td style="font-size:11pt;display:flex;justify-content: space-between;">
+					
+					<div class="head" style="">
+						<b>Сервис-центр «Нанобайт»</b><br>
+						+7 978 745 37 55
+					</div>
+					
+					<div class="head" style="text-align:right;line-height:24px;">
+						г. Симферополь, ул. Павленко, 15<br>
+						Режим работы: с 9:00 до 19:00, воскресенье выходной<br>
+						<b>nbyte.ru</b>
+					</div>
+
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<h1 class="h1">Акт приема оборудования №{{'%05d'|format(data.ta_id)}}, {{data.ta_date_add|date("d.m.Y")}}</h1>
+				</td>
+			</tr>
+			<tr>
+			<td>
+				<div style="font-size:18px;">{{data.de_name}} {{data.ta_model}}, SN:  {{data.ta_serial}}</div>
+				<table align="center" border="1" style="margin-top:15px;">
+					<tr>
+						<td style="background:#eee;border: 1px solid #000000;">
+							<span class="blk-head">Описание неисправности со слов клиента</span>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="500" valign="top" style="border: 1px solid #000000;">
+							<textarea style="padding:10px;border:none;width:calc(100% - 20px);line-height:26px;font-size:14pt;">{{data.ta_what_to_do}}</textarea>
+						</td>
+					</tr>
+
+				</table>
+			</td>
+			</tr>
+
+			<tr>
+				<td style="display:flex;justify-content: space-between;padding-top:40px;">
+					<div style="">
+						<b>Клиент: </b><input type="text" style="font-size:18px;border:none;width:300px;" value="{{data.cl_name}}, тел.: {{data.cl_phone}}">
+					</div>
+					<div style="text-align:right;line-height:20px;">
+						Приемщик _____________ 	М.П.
+					</div>
+				</td>
+			</tr>
+			<tr>
+		</table>
+	</div>
+{% endblock %}

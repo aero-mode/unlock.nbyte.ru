@@ -1,0 +1,24 @@
+{% extends "main.tpl.twig" %}
+{% block title %}Авторизация{% endblock %}
+{% block scripts %}
+	<style>
+		.login_form{
+			text-align:center;
+			margin: 150px;
+		}
+		.login, .pass, .buttom{
+			padding: 5px 5px;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	<main class="content">
+		<div class="login_form">
+			<form action="{{site}}/login/" method="POST" id="login">
+				<div class="login"><input type="text" name="user_name" id="user_name"/></div>
+				<div class="pass"><input type="password" name="user_pass" id="user_pass"/></div>
+				<input type="submit" id="loginButton" value="Войти">
+			</form>
+		</div>
+	</main>
+{% endblock %}

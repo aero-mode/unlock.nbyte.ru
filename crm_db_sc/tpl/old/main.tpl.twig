@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>{% block title %}{% endblock %}</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<script src="https://nbyte.ru/crm_db_sc/tpl/old/scripts/jquery.min.js"></script>
+	<link href="https://nbyte.ru/crm_db_sc/tpl/old/css/style.css" rel="stylesheet"/>
+	<script src="https://nbyte.ru/crm_db_sc/tpl/old/scripts/jquery.form.min.js"></script>
+	<script src="https://nbyte.ru/crm_db_sc/tpl/old/scripts/jquery-ui.js"></script>
+	<script src="https://nbyte.ru/crm_db_sc/tpl/old/scripts/jquery.maskedinput.js"></script>
+	<link rel="stylesheet" href="https://nbyte.ru/crm_db_sc/tpl/old/css/jquery-ui/start/jquery-ui.css" />
+	{% block scripts %}{% endblock %}
+</head>
+<body>
+<div class="wrapper">
+	<main class="content">
+		{% block body %}{% endblock %}
+	</main>
+	</div>
+</body>
+</html>

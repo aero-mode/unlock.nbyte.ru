@@ -1,0 +1,100 @@
+{% extends "main.tpl.twig" %}
+{% block title %}Редактирование задачи{% endblock %}
+{% block scripts %}
+	<link href="{{theme}}/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="{{theme}}/scripts/jquery.validationEngine.js"></script>
+	<script type="text/javascript" src="{{theme}}/scripts/jquery.validationEngine-ru.js"></script>
+	<script src="{{theme}}/scripts/autoresize.jquery.js"></script>
+	<style>
+		table, table td {
+			border-collapse:collapse !important;
+			padding:3px;
+			width: 800px;
+			margin: 0;
+		}
+	</style>
+	<script>
+		$(document).ready(function(){
+			$("#form").validationEngine();
+			$('textarea').autoResize();
+		});
+	</script>
+{% endblock %}
+{% block body %}
+	<div class="content-header">
+		<h1>Новая задача</h1>
+	</div>
+	<div class="form">
+		<form id="form" method="POST" action="{{site}}/operator/edit/">
+			<div id="step-1">
+				<div style="float: left; border-right: 1px solid gainsboro;width: 400px">
+					<input type="hidden" id="rand" name="rand" value="{{ random() }}">
+					<input type="hidden" id="ta_id" name="ta_id" value="{{data.ta_id}}">
+					<div class="form-str"><label class="form-label" for="cl_phone">Телефон клиента</label>{{data.cl_phone}}</div>
+					<div class="form-str"><label class="form-label" for="cl_name">Имя клиента</label>{{data.cl_name}}</div>
+					<div class="form-str"><label class="form-label" for="ta_model">Модель</label>{{data.ta_model}}</div>
+					<div class="form-str"><label class="form-label" for="ta_serial">Серийный номер</label>{{data.ta_serial}}</div>
+					<div class="form-str"><label class="form-label" for="ta_de_id">Тип устройства</label>{{data.de_name}}</div>
+					<div class="form-str">
+						<div class="form-label" style="width: 130px;float: left">Комплектация</div>
+						<div style="float: right; width: 250px;">
+							{% for eqip in data.ta_equipment %}
+								{% if eqip %}
+									<div>{{eqip}}</div>
+								{% endif %}
+							{% endfor %}
+						</div>
+						<div style="clear: both"></div>
+					</div>
+					<div class="form-str"><label class="form-label" for="ta_fi_id">Откуда узнали</label>{{data.fi_name}}</div>
+				</div>
+				<div style="float: right;width: 399px">
+					<div class="form-str"><label class="form-label" for="ta_what_to_do">Переговоры с клиентом</label><textarea readonly name="ta_what_to_do" id="ta_what_to_do">{{data.ta_what_to_do}}</textarea></div>
+					<div class="form-str"><label class="form-label" for="ta_what_is_done">Что сделано</label><textarea class="validate[required]" name="ta_what_is_done" id="ta_what_is_done">{{data.ta_what_is_done}}</textarea></div>
+					<div class="form-str">
+						<label class="form-label" for="ta_price_work" style="width:115px;"></label>
+						<label class="form-label" for="ta_price_work" style="width:50px;">Цена Р.</label>
+							<input name="ta_price_work" style="width:50px;" id="ta_price_work" class="validate[required,custom[onlyNumberSp]]" value="{{data.ta_price_work is empty ? "0" : data.ta_price_work}}">
+						<label class="form-label" for="ta_price_hard" style="width:50px;">Цена Ж.</label>
+							<input name="ta_price_hard" style="width:50px;" id="ta_price_hard" class="validate[required,custom[onlyNumberSp]]" value="{{data.ta_price_hard is empty ? "0" : data.ta_price_hard}}">
+					</div>
+				</div>
+				<div style="clear: both"></div>
+				<div style="text-align: center; padding-top:20px;">
+					<table align="center" border="1" style="margin-top:15px;">
+						<thead>
+						<tr>
+							<td style="background:#eeeeee;width:300px; border: 1px solid #000000;">
+								<label for="act1"><span class="blk-head">Услуга</span></label>
+							</td>
+							<td style="background:#eeeeee;width:100px; border: 1px solid #000000;">
+								<label for="act2"><span class="blk-head">Гарантия, мес.</span></label>
+							</td>
+							<td style="background:#eeeeee;width:100px; border: 1px solid #000000;">
+								<label for="act3"><span class="blk-head">Цена</span></label>
+							</td>
+						</tr>
+						</thead>
+						<tr>
+							<td valign="top" style="width:550px; border: 1px solid #000000;">
+								<textarea rows="5" style="border:none;font:Arial,sans-serif;width:95%;line-height:26px;font-size:14pt;" id="act1" name="act[ta_what_is_done]">{{data.ta_act.ta_what_is_done}}</textarea>
+							</td>
+							<td valign="top" style="width:125px; border: 1px solid #000000;">
+								<textarea rows="5" style="border:none;font:Arial,sans-serif;width:92%;line-height:26px;font-size:14pt;" id="act2" name="act[warranty]">{{data.ta_act.warranty}}</textarea>
+							</td>
+							<td valign="top" style="width:125px; border: 1px solid #000000;">
+								<textarea rows="5" style="border:none;font:Arial,sans-serif;width:92%;line-height:26px;font-size:14pt;" id="act3" name="act[price]">{{data.ta_act.price}}</textarea>
+							</td>
+						</tr>
+
+					</table>
+				</div>
+				<div style="clear: both"></div>
+				<div style="text-align: center; padding-top:20px;">
+					<button name="save">Сохранить</button>
+					<button name="end">Завершить</button>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

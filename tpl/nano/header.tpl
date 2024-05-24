@@ -24,17 +24,7 @@
 	</ul>
 </nav>
 <div>
-<<<<<<< HEAD
    <h1 class="slogan"><span style="color:red"> тест 1.1</span></h1>
    <h1 class="slogan"><span style="color:green"> Востановление данных с любых носителей.</span>
-=======
-   <h1 class="slogan"><span style="color:red"> АКЦИЯ! Ремонт Смартфона \ Планшета - 300 руб!</span> 
-   <span style="color:red"> </span></h1>
-    <h1 class="slogan">     
-            <span style="color:red"> Подробней. Звоните!  </span></h1>
-             <h1 class="slogan">
-             <h1 class="slogan"><span style="color:red"></span></h1></span> </h1>
-             <h1 class="slogan"><span style="color:green"> Востановление данных с любых носителей.</span> 
->>>>>>> ba5912d1e3fe4ca237450b73b387552d643cd810
    <span style="color:green"> </span></h1>
 </div>

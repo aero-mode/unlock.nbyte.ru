@@ -220,7 +220,7 @@ $(document).ready(function(){
 					$("#slider-range").slider({value: min});
 					//$("#amount").text(min);
 				},
-				1000
+				1
 			);
 			$('#countdown_dashboard').countDown({
 				targetOffset: {

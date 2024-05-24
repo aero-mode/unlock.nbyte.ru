@@ -1,0 +1,187 @@
+{% extends "main.tpl.twig" %}
+{% block title %}Добавление задачи{% endblock %}
+{% block scripts %}
+	<link href="https://nbyte.ru/crm_db_sc/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="https://nbyte.ru/crm_db_sc/scripts/jquery.validationEngine.js"></script>
+	<script type="text/javascript" src="https://nbyte.ru/crm_db_sc/scripts/jquery.validationEngine-ru.js"></script>
+	<script>
+		$(document).ready(function(){
+			$("#cl_phone").mask("+7(999) 999-99-99");
+			$("#form").validationEngine();
+			$("#next").on('click', function(e){
+				e.preventDefault();
+				$("#step-1").slideUp();
+				$("#step-2").slideDown();
+			});
+			$("#prev").on('click', function(e){
+				e.preventDefault();
+				$("#step-1").slideDown();
+				$("#step-2").slideUp();
+			});
+			$("#form").ajaxForm({
+				success: function(data){
+					if(data.result == 'ok'){
+						window.open('{{site}}/act/reception/?id='+data.id, '_blank', 'width=850,height=600,left=50,top=50,location=no,menubar=no,scrollbars=no,status=no,toolbar=no');
+						location.href= '{{site}}/operator/';
+						//window.open('/act/diagnosis/?id='+data.id, '_blank', 'width=850,height=600,left=50,top=50,location=no,menubar=no,scrollbars=no,status=no,toolbar=no');
+					}
+				}
+			});
+			$('#cl_phone').autocomplete({
+				source: "/data/get_clients/",
+				minLength: 5,
+				delay: 500,
+				select: function( event, ui ) {
+					$('#ta_cl_id').val(ui.item.id);
+					$('#cl_phone').val(ui.item.phone);
+					$('#cl_name').val(ui.item.name);
+				}
+			});
+		});
+	</script>
+{% endblock %}
+{% block body %}
+	<div class="content-header">
+		<h1><a href='/crm_db_sc/operator/'>Список</a> / Новая задача</h1>
+	</div>
+	<div class="form">
+		<form id="form" method="POST" action="{{site}}/operator/add/">
+			<div id="step-1">
+				<div style="float: left; border-right: 1px solid gainsboro;width: 400px">
+					<input type="hidden" id="rand" name="rand" value="{{ random() }}">
+					<input type="hidden" id="ta_cl_id" name="ta_cl_id">
+					<div class="form-str"><label class="form-label" for="cl_phone">Телефон клиента</label><input name="cl_phone" class="validate[required,custom[phone]]" value="" type="text" id="cl_phone"></div>
+					<div class="form-str"><label class="form-label" for="cl_name">Имя клиента</label><input name="cl_name" class="validate[required,custom[onlyLetterSp]]" value="" type="text" id="cl_name"></div>
+					<div class="form-str"><label class="form-label" for="ta_de_id">Тип устройства</label>
+						<select id="ta_de_id" name="ta_de_id" class="validate[required]">
+							<option selected></option>
+							{% for device in devices %}
+								<option value="{{device.de_id}}">{{device.de_name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="form-str"><label class="form-label" for="ta_model">Модель</label><input class="validate[required,minSize[2]]" name="ta_model" type="text" id="ta_model"></div>
+					<div class="form-str"><label class="form-label" for="ta_serial">Серийный номер</label><input class="validate[required,minSize[3]]" name="ta_serial" type="text" id="ta_serial"></div>
+					<div class="form-str">
+						<div class="form-label" style="width: 130px;float: left">Комплектация</div>
+						<div style="float: right; width: 230px;">
+							{% set id = '' %}
+							{% for comp_part in comp_parts %}
+								<label style="display:inline-block;width:70px;padding-right:5px;" for="eq_{{comp_part.co_id}}">{{comp_part.co_name}}</label><input style="margin-right:5px;width: 15px" id="eq_{{comp_part.co_id}}" type="checkbox" name="ta_equipment[]" value="{{comp_part.co_name}}"><br>
+								{% if loop.last %}
+									{% set id = comp_part.co_id %}
+								{% endif %}
+							{% endfor %}
+							<label style="display:inline-block;width:70px;padding-right:5px;" for="eq_{{id+1}}">Другое</label><input style="margin-right:5px; width:120px;" id="eq_{{id+1}}" type="text" name="ta_equipment[]"><br>
+						</div>
+						<div style="clear: both"></div>
+					</div>
+				</div>
+				<div style="float: right;width: 399px">
+					<div class="form-str"><label class="form-label" for="ta_what_to_do">Переговоры с клиентом</label><textarea class="validate[required]" name="ta_what_to_do" id="ta_what_to_do"></textarea></div>
+					<div class="form-str"><label class="form-label" for="ta_what_is_done">Что сделано</label><textarea class="validate[required]" name="ta_what_is_done" id="ta_what_is_done"></textarea></div>
+					<div class="form-str"><label class="form-label" for="ta_fi_id">Откуда узнали</label>
+						<select id="ta_fi_id" name="ta_fi_id" class="validate[required]">
+							<option selected></option>
+							{% for find_out in find_outs %}
+								<option value="{{find_out.fi_id}}">{{find_out.fi_name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div style="clear: both"></div>
+				<div style="text-align: center; padding-top:20px;">
+					<button>Готово</button>
+					<!--<button id="next">Далее</button>-->
+				</div>
+			</div>
+			<!--<div id="step-2" style="display: none">
+				<div style="float: left; border-right: 1px solid gainsboro;width: 400px">
+					<div class="diag-str">
+						<div class="diag-label">
+							Как часто пользуетесь ноутбуком?
+						</div>
+						<div class="diag-data">
+							<input type="radio" name="diag[1]" value="Редко" id="diag-1-1"><label for="diag-1-1">Редко</label><br/>
+							<input type="radio" name="diag[1]" value="По вечерам" id="diag-1-2"><label for="diag-1-2">По вечерам</label><br/>
+							<input type="radio" name="diag[1]" value="Каждый день" id="diag-1-3"><label for="diag-1-3">Каждый день</label>
+						</div>
+					</div>
+					<div class="diag-str">
+						<div class="diag-label">
+							Как используется ноутбук?
+						</div>
+						<div class="diag-data">
+							<input type="radio" name="diag[2]" id="diag-2-1" value="Стационарно"><label for="diag-2-1">Стационарно</label><br/>
+							<input type="radio" name="diag[2]" id="diag-2-2" value="Ношу с собой"><label for="diag-2-2">Ношу с собой</label>
+						</div>
+					</div>
+					<div class="diag-str">
+						<div class="diag-label">
+							Цель использования?
+						</div>
+						<div class="diag-data">
+							<input type="checkbox" name="diag[3][]" id="diag-3-1" value="Работа"><label for="diag-3-1">Работа</label><br/>
+							<input type="checkbox" name="diag[3][]" id="diag-3-2" value="Учёба"><label for="diag-3-2">Учёба</label><br/>
+							<input type="checkbox" name="diag[3][]" id="diag-3-3" value="Игры"><label for="diag-3-3">Игры</label><br/>
+							<input type="checkbox" name="diag[3][]" id="diag-3-4" value="Интернет"><label for="diag-3-4">Интернет</label>
+						</div>
+					</div>
+					<div class="diag-str">
+						<div class="diag-label">
+							<label for="diag-4">Кто устанавливал windows?</label>
+						</div>
+						<div class="diag-data">
+							<input type="text" name="diag[4]" id="diag-4" />
+						</div>
+					</div>
+				</div>
+				<div style="float: right;width: 399px">
+					<div class="diag-str">
+						<div class="diag-label">
+							<label for="diag-5">Кто устанавливал антивирус?</label>
+						</div>
+						<div class="diag-data">
+							<input type="text" name="diag[5]" id="diag-5" />
+						</div>
+					</div>
+					<div class="diag-str">
+						<div class="diag-label">
+							Как вы оцениваете скорость?
+						</div>
+						<div class="diag-data">
+							<input type="radio" name="diag[6]" id="diag-6-1" value="Тормозит"><label for="diag-6-1">Тормозит</label><br/>
+							<input type="radio" name="diag[6]" id="diag-6-2" value="Нормально"><label for="diag-6-2">Нормально</label><br/>
+							<input type="radio" name="diag[6]" id="diag-6-3" value="Всё летает"><label for="diag-6-3">Всё летает</label>
+						</div>
+					</div>
+					<div class="diag-str">
+						<div class="diag-label">
+							Надёжность?
+						</div>
+						<div class="diag-data">
+							<input type="checkbox" name="diag[7][]" id="diag-7-1" value="Самопроизвольно выключается"><label for="diag-7-1">Самопроизвольно выключается</label><br/>
+							<input type="checkbox" name="diag[7][]" id="diag-7-2" value="Шумит"><label for="diag-7-2">Шумит</label><br/>
+							<input type="checkbox" name="diag[7][]" id="diag-7-3" value="Греется"><label for="diag-7-3">Греется</label><br/>
+							<input type="checkbox" name="diag[7][]" id="diag-7-4" value="Синий экран"><label for="diag-7-4">Синий экран</label>
+						</div>
+					</div>
+					<div class="diag-str">
+						<div class="diag-label">
+							Важная информация?
+						</div>
+						<div class="diag-data">
+							<input type="radio" name="diag[8]" id="diag-8-1" value="Да"><label for="diag-8-1">Да</label><br/>
+							<input type="radio" name="diag[8]" id="diag-8-2" value="Нет"><label for="diag-8-2">Нет</label>
+						</div>
+					</div>
+				</div>
+				<div style="clear: both"></div>
+				<div style="text-align: center; padding-top:20px;">
+					<button id="prev">Назад</button>
+					<button>Готово</button>
+				</div>
+			</div>-->
+		</form>
+	</div>
+{% endblock %}

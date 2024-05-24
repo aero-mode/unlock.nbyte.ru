@@ -1,0 +1,148 @@
+{% extends "main.tpl.twig" %}
+{% block title %}Акт диагностики{% endblock %}
+{% block scripts %}
+	<style>
+		.main{
+			width: 820px;
+			margin: 0;
+		}
+		.head div{
+			float: left;
+			font: "Segoe UI", Helvetica, Verdana;
+			font-size: 14px;
+		}
+		.head #a1{
+			width: 115px;
+			padding-right: 5px;
+		}
+		.head #a2{
+			width: 150px;
+			padding-right: 5px;
+		}
+		.head #a3{
+			width: 180px;
+			padding-right: 5px;
+		}
+		.head #a4{
+			width: 160px;
+			padding-right: 5px;
+		}
+		.head #a5{
+			width: 195px;
+		}
+		.td{
+			border: 1px solid #000000;
+			padding: 5px;
+		}
+		strong{
+			font-weight: bold;
+		}
+		@media print{
+			.main{
+				width: 280mm;
+				margin: 0;
+			}
+			.head div{
+				float: left;
+				font: "Segoe UI", Helvetica, Verdana;
+				font-size: 18px;
+			}
+			.head #a1{
+				width: 35mm;
+				margin-right: 5mm;
+			}
+			.head #a2{
+				width: 40mm;
+				margin-right: 5mm;
+			}
+			.head #a3{
+				width: 50mm;
+				margin-right: 5mm;
+			}
+			.head #a4{
+				width: 55mm;
+				margin-right: 5mm;
+			}
+			.head #a5{
+				width: 70mm;
+			}
+			.td{
+				border: 1px solid #000000;
+				padding: 5px;
+				font-size: 19px;
+			}
+			strong{
+				font-weight: bold;
+			}
+		}
+	</style>
+	<script>
+		$(document).ready(function(){
+			$('textarea').autoResize();
+			doPrint();
+		});
+		function doPrint() {
+			window.print();
+			window.close();
+		}
+	</script>
+{% endblock %}
+{% block body %}
+<table class="main">
+	<tr>
+		<td>
+			<div class="head">
+				<div id="a1"><strong>Ноут ID:</strong> {{'%04d'|format(data.ta_id)}}</div>
+				<div id="a2"><strong>Модель:</strong> {{data.ta_model}}</div>
+				<div id="a3"><strong>ИО Клиента:</strong> {{data.cl_name}}</div>
+				<div id="a4"><strong>Дата:</strong> {{data.ta_date_add is empty ? "" : data.ta_date_add|date("d-m-Y H:i") }}</div>
+				<div id="a5"><strong>(маркер красный, зелёный)</strong></div>
+			</div>
+		</td>
+	</tr>
+	<tr class="tr">
+		<td class="td">
+			<strong>Как часто пользуетесь ноутбуком?</strong> {{data.ta_diagnostics.1}}
+		</td>
+	</tr>
+	<tr class="tr">
+		<td class="td">
+			<strong>Как используется ноутбук?</strong> {{data.ta_diagnostics.2}}
+		</td>
+	</tr>
+	<tr class="tr">
+		<td class="td">
+			<strong>Цель использования?</strong> {% for datas in  data.ta_diagnostics.3 %}
+									{{datas}}&nbsp;&nbsp;&nbsp;&nbsp;
+			{% endfor %}
+		</td>
+	</tr>
+	<tr class="tr">
+		<td class="td">
+			<strong>Кто устанавливал windows?</strong> {{data.ta_diagnostics.4}}
+		</td>
+	</tr>
+	<tr class="tr">
+		<td class="td">
+			<strong>Кто устанавливал антивирус?</strong> {{data.ta_diagnostics.5}}
+		</td>
+	</tr>
+	<tr class="tr">
+		<td class="td">
+			<strong>Как вы оцениваете скорость?</strong> {{data.ta_diagnostics.6}}
+		</td>
+	</tr>
+	<tr class="tr">
+		<td class="td">
+			<strong>Надёжность?</strong> {% for datas in  data.ta_diagnostics.7 %}
+				{{datas}}&nbsp;&nbsp;&nbsp;&nbsp;
+			{% endfor %}
+		</td>
+	</tr>
+	<tr class="tr">
+		<td class="td">
+			<strong>Важная информация?</strong> {{data.ta_diagnostics.8}}
+		</td>
+	</tr>
+</table>
+{% endblock %}

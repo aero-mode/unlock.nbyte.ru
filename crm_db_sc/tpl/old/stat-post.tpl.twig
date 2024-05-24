@@ -1,0 +1,43 @@
+<table class="table">
+	<thead>
+	<tr>
+		<th>Число</th>
+		<th>Всего</th>
+		<th>Работа</th>
+		<th>Ж. сервис</th>					
+		<th>Ж. партнер</th>					
+		<th>Заказы</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% set work, hard, service, all, requests = 0, 0, 0, 0, 0 %}
+	{% set break = false %}
+	{% set tomorrow = "now"|date("Y-m-d") %}
+	{% for key, day in data if not break %}
+		<tr>
+			<td>{{key is empty ? "" : key|date("d")}} {{month.monthA}}</td>
+			<td>{{day.day_money.all is empty ? "0 руб." : '%s руб.'|format(day.day_money.all)}}</td>
+			<td>{{day.day_money.work is empty ? "0 руб." : '%s руб.'|format(day.day_money.work)}}</td>
+			<td>{{day.day_money.service is empty ? "0 руб." : '%s руб.'|format(day.day_money.service)}}</td>			
+			<td>{{day.day_money.hard is empty ? "0 руб." : '%s руб.'|format(day.day_money.hard)}}</td>			
+			<td>{{day.request}}</td>
+			{% set work = work + day.day_money.work %}
+			{% set hard = hard + day.day_money.hard %}
+			{% set service = service + day.day_money.service %}
+			{% set all = all + day.day_money.all %}
+			{% set requests = requests + day.request %}
+			{% if key == tomorrow %}
+				{% set break = true %}
+			{% endif %}
+		</tr>
+	{% endfor %}
+	<tr>
+		<th align='left'>Всего:</th>
+		<th align='right'>{{all}} руб.</th>
+		<th align='right'>{{work}} руб.</th>
+		<th align='right'>{{service}} руб.</th>		
+		<th align='right'>{{hard}} руб.</th>		
+		<th align='right'>{{requests}}</th>
+	</tr>
+	</tbody>
+</table>

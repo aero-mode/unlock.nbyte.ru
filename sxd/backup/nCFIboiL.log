@@ -1,0 +1,5 @@
+2014.03.07 12:58:17	1	Начало импорта БД `nb_new`
+2014.03.07 12:58:17	1	Файл: nb_new_2014-03-07_12-42-02.sql.gz
+2014.03.07 12:58:17	1	Установлена кодировка соединения: `binary`
+2014.03.07 12:58:17	1	Импорт таблицы `page`
+2014.03.07 12:58:17	4	MySQL Error: Duplicate entry \'69\' for key \'PRIMARY\' (/usr/home/zak/data/www/nanobyte.com.ua/sxd/index.php:1594)
